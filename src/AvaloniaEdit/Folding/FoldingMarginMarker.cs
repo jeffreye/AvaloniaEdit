@@ -22,6 +22,7 @@ using AvaloniaEdit.Utils;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 
 namespace AvaloniaEdit.Folding
 {
@@ -68,7 +69,8 @@ namespace AvaloniaEdit.Folding
 
         public override void Render(DrawingContext drawingContext)
         {
-            var margin = (FoldingMargin)Parent;
+            IVisual maker = this;
+            var margin = (FoldingMargin)maker.VisualParent;
             var activePen = new Pen(margin.SelectedFoldingMarkerBrush,
                 startLineCap: PenLineCap.Square,
                 endLineCap: PenLineCap.Square);
