@@ -103,7 +103,7 @@ namespace AvaloniaEdit.Rendering
 
         public override Rect ComputeBoundingBox()
         {
-            if (Element.IsArrangeValid)
+            if (Element.IsMeasureValid)
             {
                 var baseline = DesiredSize.Height;
                 return new Rect(new Point(0, -baseline), DesiredSize);
