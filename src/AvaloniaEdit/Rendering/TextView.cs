@@ -1317,6 +1317,8 @@ namespace AvaloniaEdit.Rendering
 
         internal void RenderBackground(DrawingContext drawingContext, KnownLayer layer)
         {
+            // this is necessary so hit-testing works properly and events get tunneled to the TextView.
+            drawingContext.FillRectangle(Brushes.Transparent, Bounds);
             foreach (var bg in _backgroundRenderers)
             {
                 if (bg.Layer == layer)
