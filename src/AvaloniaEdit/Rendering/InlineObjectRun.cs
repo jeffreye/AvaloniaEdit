@@ -103,7 +103,7 @@ namespace AvaloniaEdit.Rendering
 
         public override Size GetSize(double remainingParagraphWidth)
         {
-            if (Element.IsArrangeValid)
+            if (Element.IsMeasureValid)
             {
                 return DesiredSize;
             }
@@ -116,7 +116,7 @@ namespace AvaloniaEdit.Rendering
             if (Element.IsMeasureValid)
             {
                 var baseline = DesiredSize.Height;
-                return new Rect(new Point(0, -baseline), DesiredSize);
+                return new Rect(DesiredSize);
             }
 
             return Rect.Empty;
