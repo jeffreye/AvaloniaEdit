@@ -20,6 +20,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using AvaloniaEdit.Text;
 using Avalonia.Input;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace AvaloniaEdit.Rendering
 {
@@ -98,8 +100,18 @@ namespace AvaloniaEdit.Rendering
             {
                 try
                 {
-                    // TODO: start proc
-                    //Process.Start(this.NavigateUri.ToString());
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        Process.Start(NavigateUri.ToString());
+                    }
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        Process.Start("open", NavigateUri.ToString());
+                    }
+                    else
+                    {
+                        Process.Start("xdg-open", NavigateUri.ToString());
+                    }
                 }
                 catch
                 {
