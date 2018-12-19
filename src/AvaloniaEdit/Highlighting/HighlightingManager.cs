@@ -117,7 +117,6 @@ namespace AvaloniaEdit.Highlighting
         private readonly object _lockObj = new object();
         private readonly Dictionary<string, IHighlightingDefinition> _highlightingsByName = new Dictionary<string, IHighlightingDefinition>();
         private readonly Dictionary<string, IHighlightingDefinition> _highlightingsByExtension = new Dictionary<string, IHighlightingDefinition>(StringComparer.OrdinalIgnoreCase);
-        private readonly List<IHighlightingDefinition> _allHighlightings = new List<IHighlightingDefinition>();
 
         /// <summary>
         /// Gets a highlighting definition by name.
@@ -134,13 +133,13 @@ namespace AvaloniaEdit.Highlighting
         /// <summary>
         /// Gets a copy of all highlightings.
         /// </summary>
-        public ReadOnlyCollection<IHighlightingDefinition> HighlightingDefinitions
+        public IReadOnlyCollection<IHighlightingDefinition> HighlightingDefinitions
         {
             get
             {
                 lock (_lockObj)
                 {
-                    return new ReadOnlyCollection<IHighlightingDefinition>(_allHighlightings);
+                    return _highlightingsByName.Values;
                 }
             }
         }
@@ -170,7 +169,6 @@ namespace AvaloniaEdit.Highlighting
 
             lock (_lockObj)
             {
-                _allHighlightings.Add(highlighting);
                 if (name != null)
                 {
                     _highlightingsByName[name] = highlighting;
