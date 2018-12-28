@@ -22,6 +22,7 @@ using AvaloniaEdit.Text;
 using Avalonia.Input;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Avalonia.Interactivity;
 
 namespace AvaloniaEdit.Rendering
 {
@@ -30,6 +31,12 @@ namespace AvaloniaEdit.Rendering
     /// </summary>
     public class VisualLineLinkText : VisualLineText
     {
+
+        /// <summary>
+        /// Routed event that should navigate to uri when the link is clicked.
+        /// </summary>
+        public static RoutedEvent<OpenUriRoutedEventArgs> OpenUriEvent { get; } = RoutedEvent.Register<VisualLineText,OpenUriRoutedEventArgs>(nameof(OpenUriEvent), RoutingStrategies.Bubble);
+
         /// <summary>
         /// Gets/Sets the URL that is navigated to when the link is clicked.
         /// </summary>
@@ -92,33 +99,14 @@ namespace AvaloniaEdit.Rendering
         }
 
         /// <inheritdoc/>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-                                                         Justification = "I've seen Process.Start throw undocumented exceptions when the mail client / web browser is installed incorrectly")]
         protected internal override void OnPointerPressed(PointerPressedEventArgs e)
         {
             if (e.MouseButton == MouseButton.Left && !e.Handled && LinkIsClickable(e.InputModifiers))
             {
-                try
-                {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        Process.Start(NavigateUri.ToString());
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        Process.Start("open", NavigateUri.ToString());
-                    }
-                    else
-                    {
-                        Process.Start("xdg-open", NavigateUri.ToString());
-                    }
-                }
-                catch
-                {
-                    // ignore all kinds of errors during web browser start
-                }
+                OpenUriRoutedEventArgs eventArgs = new OpenUriRoutedEventArgs(NavigateUri) { RoutedEvent = OpenUriEvent };
+                e.Source.RaiseEvent(eventArgs);
+                e.Handled = true;
             }
-            e.Handled = true;
         }
 
         /// <inheritdoc/>
@@ -130,6 +118,17 @@ namespace AvaloniaEdit.Rendering
                 TargetName = TargetName,
                 RequireControlModifierForClick = RequireControlModifierForClick
             };
+        }
+    }
+
+
+    public sealed class OpenUriRoutedEventArgs : RoutedEventArgs
+    {
+        public Uri Uri { get; }
+
+        public OpenUriRoutedEventArgs(Uri uri)
+        {
+            Uri = uri ?? throw new ArgumentNullException(nameof(uri));
         }
     }
 }
