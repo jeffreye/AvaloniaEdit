@@ -200,7 +200,7 @@ namespace AvaloniaEdit.Text
                 {
                     Text = StringRange[i].ToString(),
                     Typeface = new Typeface(tf.FontFamily, FontSize, tf.Style, tf.Weight)
-                }.Bounds;
+                }.Bounds.Size;
                 
                 result[i] = size.Width;
             }

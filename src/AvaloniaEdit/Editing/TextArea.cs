@@ -62,8 +62,8 @@ namespace AvaloniaEdit.Editing
             DocumentProperty.Changed.Subscribe(OnDocumentChanged);
             OptionsProperty.Changed.Subscribe(OnOptionsChanged);
 
-            AffectsArrange(OffsetProperty);
-            AffectsRender(OffsetProperty);
+            AffectsArrange<TextArea>(OffsetProperty);
+            AffectsRender<TextArea>(OffsetProperty);
         }
 
         /// <summary>
@@ -770,7 +770,7 @@ namespace AvaloniaEdit.Editing
             base.OnTextInput(e);
             if (!e.Handled && Document != null)
             {
-                if (string.IsNullOrEmpty(e.Text) || e.Text == "\x1b" || e.Text == "\b")
+                if (string.IsNullOrEmpty(e.Text) || e.Text == "\x1b" || e.Text == "\b" || e.Text == "\u007f")
                 {
                     // TODO: check this
                     // ASCII 0x1b = ESC.
